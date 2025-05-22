@@ -2,25 +2,29 @@ FROM ubuntu:22.04
 
 USER root
 
+# Copiar entrypoint
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-# Herramientas básicas
+# Instalar dependencias base
 RUN apt update && apt install -y \
     curl gnupg wget unzip openjdk-17-jdk \
-    git nodejs npm zip
+    git zip
 
-# Instalar node 18
-RUN curl -sL https://deb.nodesource.com/setup_18.x | bash - && \
-    apt-get install -y nodejs && npm i -g npm@10
+# Instalar Node.js 18 y npm 10
+RUN apt-get remove -y nodejs npm || true
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
+    apt-get install -y nodejs && \
+    npm install -g npm@10
 
 # Instalar Bubblewrap
-RUN npm i -g @bubblewrap/cli
+RUN npm install -g @bubblewrap/cli
 
-# Instalar Android SDK y Build Tools
+# Variables del SDK
 ENV ANDROID_HOME=/opt/android-sdk
 ENV PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$ANDROID_HOME/build-tools/34.0.0:$PATH
 
+# Instalar Android SDK + Build Tools + Licencias
 RUN mkdir -p $ANDROID_HOME/cmdline-tools && \
     cd $ANDROID_HOME/cmdline-tools && \
     wget https://dl.google.com/android/repository/commandlinetools-linux-10406996_latest.zip -O tools.zip && \
