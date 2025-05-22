@@ -2,7 +2,7 @@ FROM ubuntu
 USER root
 COPY entrypoint.sh /entrypoint.sh
 RUN apt update
-RUN apt -y install curl gnupg wget unzip
+RUN apt -y install curl gnupg wget unzip zipalign apksigner
 RUN curl -sL https://deb.nodesource.com/setup_21.x | bash -
 RUN chmod +x /entrypoint.sh
 RUN apt -y install nodejs
