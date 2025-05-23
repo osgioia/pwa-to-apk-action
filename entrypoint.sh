@@ -29,7 +29,4 @@ apksigner sign \
 # Verificar
 apksigner verify --verbose "$APK_SIGNED"
 
-# Copiar APK final firmado a /github/workspace
-cp "$APK_SIGNED" /github/workspace/
-
 echo "========================= APK signed and ready ========================="
