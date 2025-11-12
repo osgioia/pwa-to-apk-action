@@ -13,7 +13,7 @@ RUN apt update && apt install -y \
 
 # Instalar Node.js 18 y npm 10
 RUN apt-get remove -y nodejs npm || true
-RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
     apt-get install -y nodejs && \
     npm install -g npm@10
 
