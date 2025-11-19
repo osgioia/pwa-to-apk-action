@@ -12,8 +12,11 @@ RUN npm install -g @bubblewrap/cli
 
 ENV ANDROID_HOME=/root/.bubblewrap/android_sdk
 ENV BUBBLEWRAP_ALLOW_CUSTOM_SDKS=true
-
 ENV PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$ANDROID_HOME/build-tools/34.0.0:$PATH
+
+# ✔ FIX: Bubblewrap JDK detection
+RUN mkdir -p /root/.bubblewrap/jdk
+RUN cp -r /usr/lib/jvm/java-17-openjdk-amd64/* /root/.bubblewrap/jdk/
 
 RUN mkdir -p $ANDROID_HOME/cmdline-tools/latest
 RUN cd /tmp && \
