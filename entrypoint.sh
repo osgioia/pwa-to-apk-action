@@ -1,20 +1,13 @@
 #!/bin/sh -l
 set -e
 
-echo "=== Moving to project root: $1 ==="
+echo "=== Change directory to $1 ==="
 cd "$1"
 
-echo "=== Building via Bubblewrap ==="
-bubblewrap build --skipPwaValidation --skipSigning --non-interactive
+echo "=== Bubblewrap: building APK ==="
+bubblewrap build --non-interactive --skipPwaValidation --skipSigning
 
-echo "=== Locating unsigned APK ==="
 APK_UNSIGNED=$(ls *.apk | grep unsigned | head -n1)
-
-if [ -z "$APK_UNSIGNED" ]; then
-  echo "ERROR: Couldn't find APK unsigned"
-  exit 1
-fi
-
 APK_ALIGNED="app-aligned.apk"
 APK_SIGNED="app-signed.apk"
 
@@ -32,4 +25,4 @@ apksigner sign \
 
 apksigner verify --verbose "$APK_SIGNED"
 
-echo "=== DONE ==="
+echo "=== Done! ==="
