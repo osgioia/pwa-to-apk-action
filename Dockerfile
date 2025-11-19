@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM node:20-ubuntu
 
 USER root
 
@@ -8,9 +8,7 @@ RUN chmod +x /entrypoint.sh
 RUN apt update && apt install -y \
     curl wget unzip openjdk-17-jdk git zip
 
-RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
-    apt-get install -y nodejs && \
-    npm install -g npm@10 @bubblewrap/cli
+RUN npm install -g @bubblewrap/cli
 
 ENV ANDROID_HOME=/root/.bubblewrap/android_sdk
 ENV BUBBLEWRAP_ALLOW_CUSTOM_SDKS=true
