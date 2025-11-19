@@ -8,6 +8,9 @@ export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools
 echo "=== Change directory to $1 ==="
 cd "$1"
 
+echo "=== Pre-validating PWA config ==="
+bubblewrap updateConfig --non-interactive || true
+
 echo "=== Bubblewrap: building APK ==="
 bubblewrap build --non-interactive --skipPwaValidation --skipSigning
 
