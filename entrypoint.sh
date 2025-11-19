@@ -1,6 +1,10 @@
 #!/bin/sh -l
 set -e
 
+export BUBBLEWRAP_ALLOW_CUSTOM_SDKS=true
+export ANDROID_HOME=/root/.bubblewrap/android_sdk
+export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$ANDROID_HOME/build-tools/34.0.0:$PATH"
+
 echo "=== Change directory to $1 ==="
 cd "$1"
 
