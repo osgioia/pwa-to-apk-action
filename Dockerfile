@@ -9,12 +9,12 @@ RUN apt update && apt install -y \
 
 RUN npm install --silent -g @bubblewrap/cli
 
-ENV ANDROID_HOME=/root/.bubblewrap/android_sdk
+ENV ANDROID_HOME=/opt/bubblewrap/android_sdk
 ENV BUBBLEWRAP_ALLOW_CUSTOM_SDKS=true
 ENV PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$ANDROID_HOME/build-tools/34.0.0:$PATH
 
-RUN mkdir -p /root/.bubblewrap/jdk
-RUN cp -r /usr/lib/jvm/java-17-openjdk-amd64/* /root/.bubblewrap/jdk/
+RUN mkdir -p /opt/bubblewrap/jdk
+RUN cp -r /usr/lib/jvm/java-17-openjdk-amd64/* /opt/bubblewrap/jdk/
 
 RUN mkdir -p $ANDROID_HOME/cmdline-tools/latest
 RUN cd /tmp && \
@@ -31,7 +31,8 @@ RUN sdkmanager \
     "platforms;android-34" \
     "build-tools;34.0.0"
 
-RUN mkdir -p /root/.bubblewrap && \
-    echo '{"jdkPath":"/root/.bubblewrap/jdk","androidSdkPath":"'"$ANDROID_HOME"'"}' > /root/.bubblewrap/config.json
+RUN mkdir -p /opt/bubblewrap && \
+    echo '{"jdkPath":"/opt/bubblewrap/jdk","androidSdkPath":"'"$ANDROID_HOME"'"}' > /opt/bubblewrap/config.json && \
+    chmod -R 777 /opt/bubblewrap
 
 ENTRYPOINT ["/entrypoint.sh"]
