@@ -1,6 +1,6 @@
 #!/bin/sh -l
 set -e
-
+export HOME=/root
 export BUBBLEWRAP_ALLOW_CUSTOM_SDKS=true
 export ANDROID_HOME=/root/.bubblewrap/android_sdk
 export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$ANDROID_HOME/build-tools/34.0.0:$PATH"
@@ -31,5 +31,4 @@ apksigner sign \
   "$APK_ALIGNED"
 
 apksigner verify --verbose "$APK_SIGNED"
-
 echo "=== Done! ==="
