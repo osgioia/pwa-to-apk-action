@@ -7,7 +7,7 @@ RUN chmod +x /entrypoint.sh
 RUN apt update && apt install -y \
     curl wget unzip openjdk-17-jdk git zip
 
-RUN npm install -g @bubblewrap/cli
+RUN npm install --silent -g @bubblewrap/cli
 
 ENV ANDROID_HOME=/root/.bubblewrap/android_sdk
 ENV BUBBLEWRAP_ALLOW_CUSTOM_SDKS=true
@@ -18,9 +18,11 @@ RUN cp -r /usr/lib/jvm/java-17-openjdk-amd64/* /root/.bubblewrap/jdk/
 
 RUN mkdir -p $ANDROID_HOME/cmdline-tools/latest
 RUN cd /tmp && \
-    wget https://dl.google.com/android/repository/commandlinetools-linux-10406996_latest.zip -O tools.zip && \
-    unzip tools.zip && \
+    wget -q https://dl.google.com/android/repository/commandlinetools-linux-10406996_latest.zip -O tools.zip && \
+    unzip -q tools.zip && \
     mv cmdline-tools/* $ANDROID_HOME/cmdline-tools/latest/
+
+RUN mkdir -p $ANDROID_HOME/tools
 
 RUN yes | sdkmanager --licenses
 
