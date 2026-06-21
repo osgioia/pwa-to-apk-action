@@ -1,5 +1,4 @@
-FROM node:20
-
+FROM node:22
 USER root
 
 COPY entrypoint.sh /entrypoint.sh
@@ -14,7 +13,6 @@ ENV ANDROID_HOME=/root/.bubblewrap/android_sdk
 ENV BUBBLEWRAP_ALLOW_CUSTOM_SDKS=true
 ENV PATH=$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$ANDROID_HOME/build-tools/34.0.0:$PATH
 
-# ✔ FIX: Bubblewrap JDK detection
 RUN mkdir -p /root/.bubblewrap/jdk
 RUN cp -r /usr/lib/jvm/java-17-openjdk-amd64/* /root/.bubblewrap/jdk/
 
@@ -25,9 +23,13 @@ RUN cd /tmp && \
     mv cmdline-tools/* $ANDROID_HOME/cmdline-tools/latest/
 
 RUN yes | sdkmanager --licenses
+
 RUN sdkmanager \
     "platform-tools" \
     "platforms;android-34" \
     "build-tools;34.0.0"
+
+RUN mkdir -p /root/.bubblewrap && \
+    echo '{"jdkPath":"/root/.bubblewrap/jdk","androidSdkPath":"'"$ANDROID_HOME"'"}' > /root/.bubblewrap/config.json
 
 ENTRYPOINT ["/entrypoint.sh"]
