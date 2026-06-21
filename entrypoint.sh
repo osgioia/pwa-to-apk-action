@@ -13,7 +13,8 @@ echo "=== Change directory to $1 ==="
 cd "$1"
 
 echo "=== Pre-validating PWA config ==="
-bubblewrap updateConfig --non-interactive || true
+bubblewrap updateConfig --non-interactive --jdkPath="$JAVA_HOME" --androidSdkPath="$ANDROID_HOME"
+
 
 echo "=== Bubblewrap: building APK ==="
 bubblewrap build --non-interactive --skipPwaValidation --skipSigning
