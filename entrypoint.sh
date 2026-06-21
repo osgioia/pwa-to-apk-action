@@ -1,20 +1,33 @@
 #!/bin/sh -l
 set -e
-export HOME=/root
+
+# Forzar rutas fijas conocidas del Dockerfile
 export BUBBLEWRAP_ALLOW_CUSTOM_SDKS=true
 export ANDROID_HOME=/opt/bubblewrap/android_sdk
+export JDK_PATH="/opt/bubblewrap/jdk"
 export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$ANDROID_HOME/build-tools/34.0.0:$PATH"
+
+# Variables nativas de entorno que lee Bubblewrap CLI internamente
+export BUBBLEWRAP_JDK_PATH="$JDK_PATH"
+export BUBBLEWRAP_ANDROID_SDK_PATH="$ANDROID_HOME"
+
+# Escribir la configuración directamente en el HOME real de GitHub Actions (/github/home)
+# y también en la ruta tradicional de Node
+CONFIG_CONTENT="{\"jdkPath\":\"$JDK_PATH\",\"androidSdkPath\":\"$ANDROID_HOME\"}"
+
+mkdir -p /github/home/.bubblewrap
+echo "$CONFIG_CONTENT" > /github/home/.bubblewrap/config.json
 
 NODE_HOME=$(node -e 'console.log(require("os").homedir())')
 mkdir -p "$NODE_HOME/.bubblewrap"
-cp /opt/bubblewrap/config.json "$NODE_HOME/.bubblewrap/config.json"
+echo "$CONFIG_CONTENT" > "$NODE_HOME/.bubblewrap/config.json"
 
 echo "=== Change directory to $1 ==="
 cd "$1"
 
 echo "=== Pre-validating PWA config ==="
-bubblewrap updateConfig --non-interactive --jdkPath="$JAVA_HOME" --androidSdkPath="$ANDROID_HOME"
-
+# Se eliminó el "|| true" para que si falla aquí, el CI se detenga con un error claro
+bubblewrap updateConfig --non-interactive --jdkPath="$JDK_PATH" --androidSdkPath="$ANDROID_HOME"
 
 echo "=== Bubblewrap: building APK ==="
 bubblewrap build --non-interactive --skipPwaValidation --skipSigning
