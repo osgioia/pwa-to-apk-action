@@ -5,6 +5,10 @@ export BUBBLEWRAP_ALLOW_CUSTOM_SDKS=true
 export ANDROID_HOME=/root/.bubblewrap/android_sdk
 export PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools:$ANDROID_HOME/build-tools/34.0.0:$PATH"
 
+NODE_HOME=$(node -e 'console.log(require("os").homedir())')
+mkdir -p "$NODE_HOME/.bubblewrap"
+cp /root/.bubblewrap/config.json "$NODE_HOME/.bubblewrap/config.json"
+
 echo "=== Change directory to $1 ==="
 cd "$1"
 
